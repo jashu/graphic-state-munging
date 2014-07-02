@@ -12,4 +12,4 @@ The repository contains two subdirectories:
 To install lickometer in R type:
 
     library(devtools)
-    install_github("lickometer", "jashu", subdir="graphic-state-munging") 
+    install_github("graphic-state-munging", "jashu", subdir="lickometer") 
