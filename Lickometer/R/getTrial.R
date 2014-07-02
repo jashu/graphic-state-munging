@@ -8,6 +8,7 @@
 
 #Example: 'ExtPre13_2' would refer to the pre-CS interval of the 13th trial of the second session of
 #          extinction. The function would return '13'.
+#' @importFrom stringr str_locate
 
 getTrial = function(string)
 {
