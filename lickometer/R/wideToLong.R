@@ -4,6 +4,7 @@
 #' 
 #' @param df data frame of CER measurements in wide format
 #' @param CER label for the conditioned emotional response. Defaults to 'Freezing'.
+#' @param CS label for the conditioned stimulus. Defaults to 'Tone'.
 #' @return new data frame
 #' @author Jason Shumake
 #' @details 
@@ -36,21 +37,30 @@
 #'    
 #' @export
 #' @importFrom reshape2 melt
+#' @importFrom stringr str_locate
 
-wideToLong = function(df,CER='Freezing')
+wideToLong = function(df,CER='Freezing',CS='Tone')
 {
   df = melt(df, id.vars = 'Subject', value.name = CER)
-  df$Session[grepl('^Ext\\w+_1$',df$variable)] = 'Extinction 1'
-  df$Session[grepl('^Ext\\w+_2$',df$variable)] = 'Extinction 2'
-  df$Session[grepl('^Rec\\w+_1$',df$variable)] = 'LTM'
-  df$Session[grepl('^Rec\\w+_2$',df$variable)] = 'Reinstatement'
-  df$Session[grepl('^Rec\\w+_3$',df$variable)] = 'Spont.Recover'
+  df$Session.Type = NA
+  df$Session.Num = 1
+  df$Trial = NA
+  df$CS = NA
+  
+  df$Session.Type[grepl('^Hab',df$variable)] = 'Hab'
+  df$Session.Type[grepl('^Acq',df$variable)] = 'Acq'
+  df$Session.Type[grepl('^Ext',df$variable)] = 'Ext'
+  df$Session.Type[grepl('^Rec',df$variable)] = 'LTM'
   df$CS[grepl('Pre',df$variable)] = 'Context'
-  df$CS[grepl('CS',df$variable)] = 'Tone'
+  df$CS[grepl('CS',df$variable)] = CS
+
   for (i in 1:nrow(df))
   {
-    df$Trial[i] = getTrial(df$variable[i])
+    variable = as.character(df$variable[i])
+    if (grepl('_',variable)) df$Session.Num[i] = getSession(variable)
+    df$Trial[i] = getTrial(variable)
   }
-  if (is.data.table(df)) df$variable = NULL else df[,-'variable']
+
+  df$variable = NULL
   return (df)
 }

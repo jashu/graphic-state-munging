@@ -3,12 +3,14 @@
 \alias{wideToLong}
 \title{Wide-to-long format conversion}
 \usage{
-wideToLong(df, CER = "Freezing")
+wideToLong(df, CER = "Freezing", CS = "Tone")
 }
 \arguments{
 \item{df}{data frame of CER measurements in wide format}
 
 \item{CER}{label for the conditioned emotional response. Defaults to 'Freezing'.}
+
+\item{CS}{label for the conditioned stimulus. Defaults to 'Tone'.}
 }
 \value{
 new data frame
